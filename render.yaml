@@ -1,0 +1,69 @@
+# Render.com Blueprint for DAFC OTB Platform Monorepo
+# This file defines all services for deployment
+
+services:
+  # ============================================
+  # Frontend - Next.js Web Application
+  # ============================================
+  - type: web
+    name: dafc-otb-web
+    runtime: node
+    region: singapore
+    plan: starter
+    buildCommand: pnpm install && pnpm build --filter=@dafc/web
+    startCommand: pnpm --filter=@dafc/web start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: dafc-otb-api
+          property: url
+      - key: NEXTAUTH_URL
+        sync: false  # Set in Render dashboard
+      - key: AUTH_SECRET
+        sync: false  # Set in Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false  # Set in Render dashboard
+
+  # ============================================
+  # Backend - NestJS API
+  # ============================================
+  - type: web
+    name: dafc-otb-api
+    runtime: node
+    region: singapore
+    plan: starter
+    buildCommand: pnpm install && pnpm build --filter=@dafc/api
+    startCommand: pnpm --filter=@dafc/api start:prod
+    healthCheckPath: /api/v1/health/ping
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dafc-otb-db
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false  # Set in Render dashboard
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        fromService:
+          type: web
+          name: dafc-otb-web
+          property: url
+
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+databases:
+  - name: dafc-otb-db
+    databaseName: dafc_otb
+    region: singapore
+    plan: starter
+    postgresMajorVersion: 15
