@@ -9,7 +9,9 @@ const nextConfig = {
   // =====================================================
 
   // Enable standalone output for Docker
-  output: 'standalone',
+  // NOTE: Disabled for Vercel deployment - causes EPERM errors on Windows
+  // Vercel handles standalone builds automatically
+  // output: 'standalone',
 
   // Enable React strict mode for better debugging
   reactStrictMode: true,

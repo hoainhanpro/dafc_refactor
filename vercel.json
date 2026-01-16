@@ -1,0 +1,7 @@
+{
+    "buildCommand": "pnpm run build --filter=@dafc/web",
+    "installCommand": "pnpm install",
+    "devCommand": "pnpm run dev --filter=@dafc/web",
+    "outputDirectory": "apps/web/.next",
+    "framework": "nextjs"
+}
