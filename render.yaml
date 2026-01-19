@@ -1,33 +1,7 @@
-# Render.com Blueprint for DAFC OTB Platform Monorepo
-# This file defines all services for deployment
+# Render.com Blueprint for DAFC OTB Platform
+# Backend deployment only - Frontend deploys to Vercel, Database uses Supabase
 
 services:
-  # ============================================
-  # Frontend - Next.js Web Application
-  # ============================================
-  - type: web
-    name: dafc-otb-web
-    runtime: node
-    region: singapore
-    plan: starter
-    buildCommand: pnpm install && pnpm build --filter=@dafc/web
-    startCommand: pnpm --filter=@dafc/web start
-    healthCheckPath: /
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: dafc-otb-api
-          property: url
-      - key: NEXTAUTH_URL
-        sync: false  # Set in Render dashboard
-      - key: AUTH_SECRET
-        sync: false  # Set in Render dashboard
-      - key: OPENAI_API_KEY
-        sync: false  # Set in Render dashboard
-
   # ============================================
   # Backend - NestJS API
   # ============================================
@@ -35,35 +9,26 @@ services:
     name: dafc-otb-api
     runtime: node
     region: singapore
-    plan: starter
+    plan: free
     buildCommand: pnpm install && pnpm build --filter=@dafc/api
     startCommand: pnpm --filter=@dafc/api start:prod
     healthCheckPath: /api/v1/health/ping
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 3001
+      # Database - Manual config required (using Supabase)
       - key: DATABASE_URL
-        fromDatabase:
-          name: dafc-otb-db
-          property: connectionString
+        sync: false  # Set in Render dashboard - Supabase pooled connection
+      - key: DIRECT_URL
+        sync: false  # Set in Render dashboard - Supabase direct connection
+      # JWT Authentication - Manual config required
       - key: JWT_SECRET
         sync: false  # Set in Render dashboard
       - key: JWT_EXPIRES_IN
         value: 7d
+      # CORS - Manual config required (update after frontend deployment)
       - key: CORS_ORIGIN
-        fromService:
-          type: web
-          name: dafc-otb-web
-          property: url
+        sync: false  # Set in Render dashboard - Will be frontend URL
 
-  # ============================================
-  # PostgreSQL Database
-  # ============================================
-databases:
-  - name: dafc-otb-db
-    databaseName: dafc_otb
-    region: singapore
-    plan: starter
-    postgresMajorVersion: 15
+# Note: Frontend deploys to Vercel separately
+# Note: Database uses Supabase (external) - no Render database needed
