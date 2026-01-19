@@ -8,10 +8,9 @@ const nextConfig = {
   // PERFORMANCE
   // =====================================================
 
-  // Enable standalone output for Docker
-  // NOTE: Disabled for Vercel deployment - causes EPERM errors on Windows
-  // Vercel handles standalone builds automatically
-  // output: 'standalone',
+  // Enable standalone output for Docker/Azure
+  // Required for Azure App Service deployment
+  output: 'standalone',
 
   // Enable React strict mode for better debugging
   reactStrictMode: true,
@@ -109,6 +108,20 @@ const nextConfig = {
             value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
+      },
+    ];
+  },
+
+  // =====================================================
+  // API REWRITES (Proxy to NestJS backend)
+  // =====================================================
+
+  async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    return [
+      {
+        source: '/api/v1/:path*',
+        destination: `${apiUrl}/api/v1/:path*`,
       },
     ];
   },
