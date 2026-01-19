@@ -10,7 +10,7 @@ services:
     runtime: node
     region: singapore
     plan: free
-    buildCommand: pnpm install --include=dev && pnpm build --filter=@dafc/api
+    buildCommand: pnpm install -w && pnpm build --filter=@dafc/api
     startCommand: pnpm --filter=@dafc/api start:prod
     healthCheckPath: /api/v1/health/ping
     envVars:
