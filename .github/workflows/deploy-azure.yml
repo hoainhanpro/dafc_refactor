@@ -152,12 +152,14 @@ jobs:
           echo "Waiting for deployment to complete..."
           sleep 90
           
+          WEBAPP_URL="agentdemo-ccfzcrb0a3crh5by.southeastasia-01.azurewebsites.net"
+          
           echo "Checking frontend..."
-          frontend_response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net || echo "000")
+          frontend_response=$(curl -s -o /dev/null -w "%{http_code}" https://$WEBAPP_URL || echo "000")
           echo "Frontend Response: HTTP $frontend_response"
           
           echo "Checking backend API..."
-          api_response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/v1/health/ping || echo "000")
+          api_response=$(curl -s -o /dev/null -w "%{http_code}" https://$WEBAPP_URL/api/v1/health/ping || echo "000")
           echo "API Response: HTTP $api_response"
           
           if [ "$frontend_response" -ge 200 ] && [ "$frontend_response" -lt 400 ]; then
