@@ -1,0 +1,294 @@
+
+> @dafc/web@1.0.0 build D:\dafc-otb-monorepo\apps\web
+> next build
+
+  Γû▓ Next.js 14.2.35
+  - Environments: .env
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/93) ...
+Error fetching approvals: n [Error]: Dynamic server usage: Route /api/v1/approvals couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at u (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\approvals\route.js:1:950)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/approvals couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (23/93) 
+Error fetching seasons: n [Error]: Dynamic server usage: Route /api/v1/master-data/seasons couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\master-data\seasons\route.js:1:948)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/master-data/seasons couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching brands: n [Error]: Dynamic server usage: Route /api/v1/master-data/brands couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\master-data\brands\route.js:1:949)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/master-data/brands couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching locations: n [Error]: Dynamic server usage: Route /api/v1/master-data/locations couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\master-data\locations\route.js:1:949)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/master-data/locations couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching categories: n [Error]: Dynamic server usage: Route /api/v1/master-data/categories couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\master-data\categories\route.js:1:949)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/master-data/categories couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Budget Summary Report Error: n [Error]: Dynamic server usage: Route /api/v1/reports/budget-summary couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\reports\budget-summary\route.js:1:933)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/reports/budget-summary couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+OTB Analysis Report Error: n [Error]: Dynamic server usage: Route /api/v1/reports/otb-analysis couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at c (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\reports\otb-analysis\route.js:1:934)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/reports/otb-analysis couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Error fetching notifications: n [Error]: Dynamic server usage: Route /api/v1/notifications couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at p (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\notifications\route.js:1:962)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/notifications couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+SKU Performance Report Error: n [Error]: Dynamic server usage: Route /api/v1/reports/sku-performance couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\6597.js:1:57764)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\292.js:1:1500)
+    at D:\dafc-otb-monorepo\apps\web\.next\server\chunks\1064.js:404:60432
+    at c (D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\reports\sku-performance\route.js:1:934)
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/v1/reports/sku-performance couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (46/93) 
+em [Error]: MISSING_MESSAGE: common.help (vi)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\2104.js:2:193022)
+    at h (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\2104.js:2:193218)
+    at f (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\2104.js:2:194378)
+    at x (D:\dafc-otb-monorepo\apps\web\.next\server\app\(dashboard)\help\page.js:1:3617)
+    at nj (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:46252)
+    at nM (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47572)
+    at nL (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:64547)
+    at nI (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47011)
+    at nM (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47718)
+    at nM (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:61547) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'common.help (vi)'
+}
+em [Error]: MISSING_MESSAGE: common.confidence (vi)
+    at d (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\2104.js:2:193022)
+    at h (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\2104.js:2:193218)
+    at f (D:\dafc-otb-monorepo\apps\web\.next\server\chunks\2104.js:2:194378)
+    at Z (D:\dafc-otb-monorepo\apps\web\.next\server\app\(dashboard)\analytics\simulator\page.js:1:9212)
+    at nj (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:46252)
+    at nM (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47572)
+    at nL (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:64547)
+    at nI (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47011)
+    at nM (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47718)
+    at nM (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:61547) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'common.confidence (vi)'
+}
+   Generating static pages (69/93) 
+ Γ£ô Generating static pages (93/93)
+   Finalizing page optimization ...
+   Collecting build traces ...
+ ΓÜá Failed to copy traced files for D:\dafc-otb-monorepo\apps\web\.next\server\pages\_app.js Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\react@18.3.1\node_modules\react' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\apps\web\node_modules\react'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 9)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1451:9)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\react@18.3.1\\node_modules\\react',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\apps\\web\\node_modules\\react'
+}
+ ΓÜá Failed to copy traced files for D:\dafc-otb-monorepo\apps\web\.next\server\pages\_error.js Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\@opentelemetry\api'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 50)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1451:9)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\@opentelemetry+api@1.9.0\\node_modules\\@opentelemetry\\api',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\\node_modules\\@opentelemetry\\api'
+}
+ ΓÜá Failed to copy traced files for D:\dafc-otb-monorepo\apps\web\.next\server\pages\_document.js Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\react-dom@18.3.1_react@18.3.1\node_modules\react-dom' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\react-dom'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 64)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1451:9)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\react-dom@18.3.1_react@18.3.1\\node_modules\\react-dom',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\\node_modules\\react-dom'
+}
+ ΓÜá Failed to copy traced files for D:\dafc-otb-monorepo\apps\web\.next\server\app\(dashboard)\master-data\users\page.js Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\@prisma+client@5.22.0_prisma@5.22.0\node_modules\@prisma\client' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\apps\web\node_modules\@prisma\client'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 72)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1464:13)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\@prisma+client@5.22.0_prisma@5.22.0\\node_modules\\@prisma\\client',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\apps\\web\\node_modules\\@prisma\\client'
+}
+ ΓÜá Failed to copy traced files for D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\integrations\s3\files\route.js Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\tslib@2.8.1\node_modules\tslib' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\node_modules\.pnpm\@aws-crypto+crc32@5.2.0\node_modules\tslib'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 6)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1464:13)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\tslib@2.8.1\\node_modules\\tslib',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@aws-crypto+crc32@5.2.0\\node_modules\\tslib'
+}
+ ΓÜá Failed to copy traced files for D:\dafc-otb-monorepo\apps\web\.next\server\app\api\v1\integrations\s3\presign\route.js Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\@smithy+util-utf8@2.3.0\node_modules\@smithy\util-utf8' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\node_modules\.pnpm\@aws-crypto+util@5.2.0\node_modules\@smithy\util-utf8'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 18)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1464:13)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\@smithy+util-utf8@2.3.0\\node_modules\\@smithy\\util-utf8',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@aws-crypto+util@5.2.0\\node_modules\\@smithy\\util-utf8'
+}
+
+> Build error occurred
+Error: EPERM: operation not permitted, symlink 'D:\dafc-otb-monorepo\node_modules\.pnpm\@next+env@14.2.35\node_modules\@next\env' -> 'D:\dafc-otb-monorepo\apps\web\.next\standalone\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\@next\env'
+    at async Object.symlink (node:internal/fs/promises:1009:10)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1402:25
+    at async Promise.all (index 86)
+    at async handleTraceFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1390:9)
+    at async copyTracedFiles (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\utils.js:1472:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:224:9
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20)
+    at async writeStandaloneDirectory (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:223:5)
+    at async D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\build\index.js:2143:17
+    at async Span.traceAsyncFn (D:\dafc-otb-monorepo\node_modules\.pnpm\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\node_modules\next\dist\trace\trace.js:154:20) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\dafc-otb-monorepo\\node_modules\\.pnpm\\@next+env@14.2.35\\node_modules\\@next\\env',
+  dest: 'D:\\dafc-otb-monorepo\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@14.2.35_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@18_beamlbjyie2tl4kaie32xj2ppm\\node_modules\\@next\\env'
+}
+ΓÇëELIFECYCLEΓÇë Command failed with exit code 1.

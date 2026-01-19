@@ -18,11 +18,37 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@dafc/shared": ["../../packages/shared/src"],
-      "@dafc/database": ["../../packages/database/src"]
+      "@/*": [
+        "src/*"
+      ],
+      "@/modules/*": [
+        "src/application/modules/*"
+      ],
+      "@/common/*": [
+        "src/application/shared/*"
+      ],
+      "@/core/*": [
+        "src/core/*"
+      ],
+      "@/infrastructure/*": [
+        "src/infrastructure/*"
+      ],
+      "@/application/*": [
+        "src/application/*"
+      ],
+      "@dafc/shared": [
+        "../../packages/shared/src"
+      ],
+      "@dafc/database": [
+        "../../packages/database/src"
+      ]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

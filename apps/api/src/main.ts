@@ -9,9 +9,9 @@ async function bootstrap() {
   // Global prefix for all routes
   app.setGlobalPrefix('api/v1');
 
-  // Enable CORS - supports comma-separated origins
+  // Enable CORS
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+    origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
   });
@@ -45,8 +45,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  // Port configuration - Render provides PORT, fallback to API_PORT for local dev
-  const port = process.env.PORT || process.env.API_PORT || 3001;
+  const port = process.env.API_PORT || 3001;
   await app.listen(port);
 
   console.log(`🚀 DAFC API is running on: http://localhost:${port}`);

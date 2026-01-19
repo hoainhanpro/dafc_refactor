@@ -34,6 +34,36 @@ interface WorkerResponse {
   error?: string;
 }
 
+interface ParsedRow {
+  rowNumber: number;
+  skuCode: string;
+  styleName: string;
+  colorCode?: string;
+  colorName?: string;
+  material?: string;
+  collection?: string;
+  gender: string;
+  category: string;
+  subcategory?: string;
+  retailPrice: number;
+  costPrice: number;
+  margin: number;
+  orderQuantity: number;
+  sizeBreakdown?: Record<string, number>;
+  supplierSKU?: string;
+  leadTime?: number;
+  moq?: number;
+  countryOfOrigin?: string;
+}
+
+interface ValidationError {
+  row: number;
+  column: string;
+  message: string;
+  severity: 'error' | 'warning';
+}
+
+
 // Column mapping
 const COLUMN_MAPPING: Record<string, string[]> = {
   skuCode: ['sku', 'sku_code', 'skucode', 'sku code', 'item code', 'itemcode', 'product code', 'article'],
@@ -137,8 +167,8 @@ async function parseExcel(
     const sizeColumns = headers.filter(h => SIZE_PATTERNS.some(p => p.test(h.trim())));
 
     // Process in chunks
-    const allData: unknown[] = [];
-    const allErrors: unknown[] = [];
+    const allData: ParsedRow[] = [];
+    const allErrors: ValidationError[] = [];
     let totalQuantity = 0;
     let totalValue = 0;
 
@@ -154,13 +184,13 @@ async function parseExcel(
       const endIdx = Math.min(startIdx + chunkSize, rawData.length);
       const chunkData = rawData.slice(startIdx, endIdx);
 
-      const chunkRows: unknown[] = [];
-      const chunkErrors: unknown[] = [];
+      const chunkRows: ParsedRow[] = [];
+      const chunkErrors: ValidationError[] = [];
 
       for (let i = 0; i < chunkData.length; i++) {
         const rowNumber = startIdx + i + 2;
         const row = chunkData[i];
-        const rowErrors: unknown[] = [];
+        const rowErrors: ValidationError[] = [];
 
         const parsed = parseRow(row, columnMap, sizeColumns, rowNumber, rowErrors);
 
@@ -211,7 +241,7 @@ async function parseExcel(
       type: 'complete',
       id: jobId,
       data: {
-        success: allErrors.filter((e: Record<string, unknown>) => e.severity === 'error').length === 0,
+        success: allErrors.filter(e => e.severity === 'error').length === 0,
         totalRows: rawData.length,
         parsedRows: allData.length,
         errorRows: rawData.length - allData.length,
@@ -252,8 +282,8 @@ function parseRow(
   columnMap: Record<string, string>,
   sizeColumns: string[],
   rowNumber: number,
-  errors: unknown[]
-): Record<string, unknown> | null {
+  errors: ValidationError[]
+): ParsedRow | null {
   const skuCode = getString(row, columnMap.skuCode);
   const styleName = getString(row, columnMap.styleName);
   const category = getString(row, columnMap.category);
@@ -336,4 +366,4 @@ function sendResponse(response: WorkerResponse) {
   self.postMessage(response);
 }
 
-export {};
+export { };

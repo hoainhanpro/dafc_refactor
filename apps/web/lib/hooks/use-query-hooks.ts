@@ -3,9 +3,9 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { 
-  useQuery, 
-  useMutation, 
+import {
+  useQuery,
+  useMutation,
   useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query';
@@ -18,27 +18,27 @@ export const queryKeys = {
   // Brands
   brands: ['brands'] as const,
   brand: (id: string) => ['brands', id] as const,
-  
+
   // Categories
   categories: ['categories'] as const,
   category: (id: string) => ['categories', id] as const,
-  
+
   // Seasons
   seasons: ['seasons'] as const,
   season: (id: string) => ['seasons', id] as const,
-  
+
   // Budgets
   budgets: (filters?: BudgetFilters) => ['budgets', filters] as const,
   budget: (id: string) => ['budgets', 'detail', id] as const,
-  
+
   // OTB Plans
   otbPlans: (filters?: OTBFilters) => ['otb-plans', filters] as const,
   otbPlan: (id: string) => ['otb-plans', 'detail', id] as const,
-  
+
   // SKU Proposals
   skuProposals: (otbPlanId: string) => ['sku-proposals', otbPlanId] as const,
   skuProposal: (id: string) => ['sku-proposals', 'detail', id] as const,
-  
+
   // AI Insights
   insights: ['ai-insights'] as const,
 };
@@ -80,16 +80,16 @@ interface Budget {
 
 async function fetchAPI<T>(url: string): Promise<T> {
   const response = await fetch(url);
-  
+
   if (!response.ok) {
     throw new Error(`API Error: ${response.status}`);
   }
-  
+
   return response.json();
 }
 
 async function mutateAPI<T>(
-  url: string, 
+  url: string,
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE',
   data?: any
 ): Promise<T> {
@@ -98,12 +98,12 @@ async function mutateAPI<T>(
     headers: { 'Content-Type': 'application/json' },
     body: data ? JSON.stringify(data) : undefined,
   });
-  
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
     throw new Error(error.message || `API Error: ${response.status}`);
   }
-  
+
   return response.json();
 }
 
@@ -132,9 +132,9 @@ export function useBrand(id: string) {
 
 export function useCreateBrand() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: (data: Partial<Brand>) => 
+    mutationFn: (data: Partial<Brand>) =>
       mutateAPI<Brand>('/api/v1/brands', 'POST', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.brands });
@@ -144,7 +144,7 @@ export function useCreateBrand() {
 
 export function useUpdateBrand() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Brand> }) =>
       mutateAPI<Brand>(`/api/v1/brands/${id}`, 'PATCH', data),
@@ -164,10 +164,10 @@ export function useBudgets(filters?: BudgetFilters) {
   if (filters?.brandId) params.set('brandId', filters.brandId);
   if (filters?.seasonId) params.set('seasonId', filters.seasonId);
   if (filters?.status) params.set('status', filters.status);
-  
+
   const queryString = params.toString();
   const url = `/api/v1/budgets${queryString ? `?${queryString}` : ''}`;
-  
+
   return useQuery({
     queryKey: queryKeys.budgets(filters),
     queryFn: () => fetchAPI<Budget[]>(url),
@@ -187,7 +187,7 @@ export function useBudget(id: string) {
 
 export function useCreateBudget() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: any) =>
       mutateAPI<Budget>('/api/v1/budgets', 'POST', data),
@@ -199,7 +199,7 @@ export function useCreateBudget() {
 
 export function useUpdateBudget() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) =>
       mutateAPI<Budget>(`/api/v1/budgets/${id}`, 'PATCH', data),
@@ -219,10 +219,10 @@ export function useOTBPlans(filters?: OTBFilters) {
   if (filters?.brandId) params.set('brandId', filters.brandId);
   if (filters?.seasonId) params.set('seasonId', filters.seasonId);
   if (filters?.status) params.set('status', filters.status);
-  
+
   const queryString = params.toString();
   const url = `/api/v1/otb-plans${queryString ? `?${queryString}` : ''}`;
-  
+
   return useQuery({
     queryKey: queryKeys.otbPlans(filters),
     queryFn: () => fetchAPI(url),

@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, setRequestLocale } from 'next-intl/server';
 import { PWAProvider } from '@/components/pwa';
+import { QueryProvider } from '@/components/providers/query-provider';
 import { routing } from '@/i18n/routing';
 import './globals.css';
 
@@ -104,17 +105,19 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.variable} ${plusJakarta.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <PWAProvider>
-              {children}
-            </PWAProvider>
-            <Toaster richColors position="top-right" />
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <PWAProvider>
+                {children}
+              </PWAProvider>
+              <Toaster richColors position="top-right" />
+            </ThemeProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

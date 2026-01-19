@@ -22,6 +22,7 @@
     "db:studio": "pnpm --filter @dafc/database exec prisma studio"
   },
   "devDependencies": {
+    "turbo": "^2.3.0",
     "typescript": "^5.3.3"
   },
   "engines": {
@@ -29,7 +30,6 @@
     "pnpm": ">=9.0.0"
   },
   "dependencies": {
-    "pnpm": "^10.28.0",
-    "turbo": "^2.3.0"
+    "pnpm": "^10.28.0"
   }
 }

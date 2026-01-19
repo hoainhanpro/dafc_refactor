@@ -271,225 +271,225 @@ export default function AISuggestionsPage() {
 
         {/* Content Grid - shared by both mobile and desktop */}
         <div className="mt-6 grid lg:grid-cols-3 gap-6 items-start">
-            {/* Suggestions List */}
-            <div className="lg:col-span-2">
-              <Card className="min-h-[400px]">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <span className={activeCategoryData?.color}>
-                        {activeCategoryData?.icon}
-                      </span>
-                      {activeCategoryData && getCategoryLabel(activeCategoryData)}
-                    </CardTitle>
-                    <Badge variant="secondary">
-                      {suggestions.length}{' '}
-                      {tAi('suggestions').toLowerCase()}
-                    </Badge>
+          {/* Suggestions List */}
+          <div className="lg:col-span-2">
+            <Card className="min-h-[400px]">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <span className={activeCategoryData?.color}>
+                      {activeCategoryData?.icon}
+                    </span>
+                    {activeCategoryData && getCategoryLabel(activeCategoryData)}
+                  </CardTitle>
+                  <Badge variant="secondary">
+                    {suggestions.length}{' '}
+                    {tAi('suggestions').toLowerCase()}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  {loading ? (
-                    <div className="flex items-center justify-center py-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                    </div>
-                  ) : suggestions.length === 0 ? (
-                    <div className="text-center py-12">
-                      <Lightbulb className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <p className="text-muted-foreground">
-                        {t('noSuggestions')}
-                      </p>
-                    </div>
-                  ) : (
-                    <ScrollArea className="h-[500px] pr-4">
-                      <div className="space-y-3">
-                        <AnimatePresence>
-                          {suggestions.map((suggestion) => (
-                            <motion.div
-                              key={suggestion.id}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, x: -100 }}
-                              className={cn(
-                                'p-4 rounded-lg border cursor-pointer transition-colors',
-                                selectedSuggestion?.id === suggestion.id
-                                  ? 'border-primary bg-primary/5'
-                                  : 'hover:bg-muted/50'
-                              )}
-                              onClick={() => setSelectedSuggestion(suggestion)}
-                            >
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <Badge
-                                      variant="outline"
-                                      className={getPriorityColor(suggestion.priority)}
-                                    >
-                                      {suggestion.priority === 'urgent' && (
-                                        <AlertTriangle className="h-3 w-3 mr-1" />
-                                      )}
-                                      {t(`priority.${suggestion.priority}`)}
-                                    </Badge>
-                                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                      {getImpactIcon(suggestion.impact)}
-                                      {t(`impact.${suggestion.impact}`)}
-                                    </div>
+                ) : suggestions.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Lightbulb className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">
+                      {t('noSuggestions')}
+                    </p>
+                  </div>
+                ) : (
+                  <ScrollArea className="h-[500px] pr-4">
+                    <div className="space-y-3">
+                      <AnimatePresence>
+                        {suggestions.map((suggestion) => (
+                          <motion.div
+                            key={suggestion.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, x: -100 }}
+                            className={cn(
+                              'p-4 rounded-lg border cursor-pointer transition-colors',
+                              selectedSuggestion?.id === suggestion.id
+                                ? 'border-primary bg-primary/5'
+                                : 'hover:bg-muted/50'
+                            )}
+                            onClick={() => setSelectedSuggestion(suggestion)}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Badge
+                                    variant="outline"
+                                    className={getPriorityColor(suggestion.priority)}
+                                  >
+                                    {suggestion.priority === 'urgent' && (
+                                      <AlertTriangle className="h-3 w-3 mr-1" />
+                                    )}
+                                    {t(`priority.${suggestion.priority}`)}
+                                  </Badge>
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                    {getImpactIcon(suggestion.impact)}
+                                    {t(`impact.${suggestion.impact}`)}
                                   </div>
-                                  <h4 className="font-medium truncate">
-                                    {suggestion.title}
-                                  </h4>
-                                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                                    {suggestion.description}
+                                </div>
+                                <h4 className="font-medium truncate">
+                                  {suggestion.title}
+                                </h4>
+                                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                                  {suggestion.description}
+                                </p>
+                              </div>
+
+                              <div className="flex flex-col items-end gap-2">
+                                <div className="text-right">
+                                  <p className="text-xs text-muted-foreground">
+                                    {t('confidence')}
+                                  </p>
+                                  <p className="font-semibold">
+                                    {Math.round(suggestion.confidence * 100)}%
                                   </p>
                                 </div>
-
-                                <div className="flex flex-col items-end gap-2">
-                                  <div className="text-right">
-                                    <p className="text-xs text-muted-foreground">
-                                      {t('confidence')}
-                                    </p>
-                                    <p className="font-semibold">
-                                      {Math.round(suggestion.confidence * 100)}%
-                                    </p>
-                                  </div>
-                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                                </div>
+                                <ChevronRight className="h-4 w-4 text-muted-foreground" />
                               </div>
-                            </motion.div>
-                          ))}
-                        </AnimatePresence>
-                      </div>
-                    </ScrollArea>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Suggestion Detail */}
-            <div>
-              <Card className="sticky top-6 min-h-[400px]">
-                <CardHeader>
-                  <CardTitle>
-                    {t('suggestionDetail')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {selectedSuggestion ? (
-                    <div className="space-y-4">
-                      {/* Header */}
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge
-                            variant="outline"
-                            className={getPriorityColor(selectedSuggestion.priority)}
-                          >
-                            {t(`priority.${selectedSuggestion.priority}`)}
-                          </Badge>
-                          <Badge variant="secondary">
-                            {t(`impact.${selectedSuggestion.impact}`)}
-                          </Badge>
-                        </div>
-                        <h3 className="font-semibold text-lg">
-                          {selectedSuggestion.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {selectedSuggestion.description}
-                        </p>
-                      </div>
-
-                      {/* Confidence */}
-                      <div>
-                        <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="text-muted-foreground">
-                            {t('confidence')}
-                          </span>
-                          <span className="font-medium">
-                            {Math.round(selectedSuggestion.confidence * 100)}%
-                          </span>
-                        </div>
-                        <Progress
-                          value={selectedSuggestion.confidence * 100}
-                          className="h-2"
-                        />
-                      </div>
-
-                      {/* Reasoning */}
-                      <div className="p-3 bg-muted/50 rounded-lg">
-                        <p className="text-xs text-muted-foreground mb-1">
-                          {t('reasoning')}
-                        </p>
-                        <p className="text-sm">{selectedSuggestion.reasoning}</p>
-                      </div>
-
-                      {/* Projected Impact */}
-                      {selectedSuggestion.projectedImpact && (
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            {t('projectedImpact')}
-                          </p>
-                          <div className="grid grid-cols-3 gap-2">
-                            {selectedSuggestion.projectedImpact.revenue && (
-                              <div className="p-2 bg-green-500/10 rounded text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  {t('revenue')}
-                                </p>
-                                <p className="font-semibold text-green-600">
-                                  ${(selectedSuggestion.projectedImpact.revenue / 1000).toFixed(0)}K
-                                </p>
-                              </div>
-                            )}
-                            {selectedSuggestion.projectedImpact.margin && (
-                              <div className="p-2 bg-blue-500/10 rounded text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  {t('margin')}
-                                </p>
-                                <p className="font-semibold text-blue-600">
-                                  +{selectedSuggestion.projectedImpact.margin}%
-                                </p>
-                              </div>
-                            )}
-                            {selectedSuggestion.projectedImpact.units && (
-                              <div className="p-2 bg-purple-500/10 rounded text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  {t('units')}
-                                </p>
-                                <p className="font-semibold text-purple-600">
-                                  {selectedSuggestion.projectedImpact.units.toLocaleString()}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Actions */}
-                      <div className="flex gap-2 pt-2">
-                        <Button
-                          className="flex-1"
-                          onClick={() => handleAction(selectedSuggestion, 'accept')}
-                        >
-                          <Check className="h-4 w-4 mr-2" />
-                          {tCommon('approve')}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => handleAction(selectedSuggestion, 'dismiss')}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
                     </div>
-                  ) : (
-                    <div className="text-center py-12">
-                      <Lightbulb className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        {t('selectSuggestion')}
+                  </ScrollArea>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Suggestion Detail */}
+          <div>
+            <Card className="sticky top-6 min-h-[400px]">
+              <CardHeader>
+                <CardTitle>
+                  {t('suggestionDetail')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {selectedSuggestion ? (
+                  <div className="space-y-4">
+                    {/* Header */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge
+                          variant="outline"
+                          className={getPriorityColor(selectedSuggestion.priority)}
+                        >
+                          {t(`priority.${selectedSuggestion.priority}`)}
+                        </Badge>
+                        <Badge variant="secondary">
+                          {t(`impact.${selectedSuggestion.impact}`)}
+                        </Badge>
+                      </div>
+                      <h3 className="font-semibold text-lg">
+                        {selectedSuggestion.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {selectedSuggestion.description}
                       </p>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+
+                    {/* Confidence */}
+                    <div>
+                      <div className="flex items-center justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">
+                          {t('confidence')}
+                        </span>
+                        <span className="font-medium">
+                          {Math.round(selectedSuggestion.confidence * 100)}%
+                        </span>
+                      </div>
+                      <Progress
+                        value={selectedSuggestion.confidence * 100}
+                        className="h-2"
+                      />
+                    </div>
+
+                    {/* Reasoning */}
+                    <div className="p-3 bg-muted/50 rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">
+                        {t('reasoning')}
+                      </p>
+                      <p className="text-sm">{selectedSuggestion.reasoning}</p>
+                    </div>
+
+                    {/* Projected Impact */}
+                    {selectedSuggestion.projectedImpact && (
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          {t('projectedImpact')}
+                        </p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {selectedSuggestion.projectedImpact.revenue && (
+                            <div className="p-2 bg-green-500/10 rounded text-center">
+                              <p className="text-xs text-muted-foreground">
+                                {t('revenue')}
+                              </p>
+                              <p className="font-semibold text-green-600">
+                                ${(selectedSuggestion.projectedImpact.revenue / 1000).toFixed(0)}K
+                              </p>
+                            </div>
+                          )}
+                          {selectedSuggestion.projectedImpact.margin && (
+                            <div className="p-2 bg-blue-500/10 rounded text-center">
+                              <p className="text-xs text-muted-foreground">
+                                {t('margin')}
+                              </p>
+                              <p className="font-semibold text-blue-600">
+                                +{selectedSuggestion.projectedImpact.margin}%
+                              </p>
+                            </div>
+                          )}
+                          {selectedSuggestion.projectedImpact.units && (
+                            <div className="p-2 bg-purple-500/10 rounded text-center">
+                              <p className="text-xs text-muted-foreground">
+                                {t('units')}
+                              </p>
+                              <p className="font-semibold text-purple-600">
+                                {selectedSuggestion.projectedImpact.units.toLocaleString()}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Actions */}
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        className="flex-1"
+                        onClick={() => handleAction(selectedSuggestion, 'accept')}
+                      >
+                        <Check className="h-4 w-4 mr-2" />
+                        {tCommon('approve')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => handleAction(selectedSuggestion, 'dismiss')}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Lightbulb className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground">
+                      {t('selectSuggestion')}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </TooltipProvider>

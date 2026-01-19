@@ -1,0 +1,189 @@
+# ============================================
+# DAFC OTB Platform - Azure App Service Deployment
+# ============================================
+# 
+# Deploy Next.js app (frontend + API routes) to Azure App Service.
+# 
+# Architecture:
+#   - Next.js app has built-in API routes at /api/v1/*
+#   - API routes connect directly to PostgreSQL via Prisma
+#   - No separate backend needed (NestJS is optional)
+#
+# Required GitHub Secrets:
+#   - AZURE_WEBAPP_PUBLISH_PROFILE: Publish profile from Azure App Service
+#   - DATABASE_URL: PostgreSQL connection string (Supabase/Azure)
+#   - AUTH_SECRET: NextAuth secret key
+#   - OPENAI_API_KEY: OpenAI API key (optional, for AI features)
+#
+# To get the publish profile:
+#   1. Go to Azure Portal > App Service > agentdemo
+#   2. Click "Download publish profile" in the top menu
+#   3. Copy the entire XML content and add it as a GitHub secret
+# ============================================
+
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9.15.0'
+  AZURE_WEBAPP_NAME: agentdemo
+
+jobs:
+  # ============================================
+  # Build and Deploy
+  # ============================================
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter=@dafc/database db:generate
+
+
+      - name: Build Next.js app
+        run: pnpm --filter=@dafc/web build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Prepare deployment package
+        run: |
+          cd apps/web
+          
+          # Install production dependencies
+          mkdir -p .deploy
+          cp -r .next .deploy/
+          cp -r public .deploy/
+          cp package.json .deploy/
+          cp next.config.mjs .deploy/
+          
+          # Copy Prisma schema and generated client
+          mkdir -p .deploy/node_modules/.prisma
+          mkdir -p .deploy/node_modules/@prisma
+          cp -r ../../packages/database/prisma .deploy/
+          cp -r node_modules/.prisma/client .deploy/node_modules/.prisma/ 2>/dev/null || true
+          cp -r node_modules/@prisma/client .deploy/node_modules/@prisma/ 2>/dev/null || true
+          
+          # Create startup script
+          cat > .deploy/startup.sh << 'EOF'
+          #!/bin/bash
+          cd /home/site/wwwroot
+          npm install --omit=dev
+          npx prisma generate --schema=./prisma/schema.prisma
+          npm run start
+          EOF
+          chmod +x .deploy/startup.sh
+          
+          # Create web.config for Azure
+          cat > .deploy/web.config << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <system.webServer>
+              <handlers>
+                <add name="iisnode" path="node_modules/next/dist/bin/next" verb="*" modules="iisnode"/>
+              </handlers>
+              <rewrite>
+                <rules>
+                  <rule name="NextJS">
+                    <match url="/*" />
+                    <action type="Rewrite" url="node_modules/next/dist/bin/next"/>
+                  </rule>
+                </rules>
+              </rewrite>
+              <iisnode node_env="production" />
+            </system.webServer>
+          </configuration>
+          EOF
+          
+          cd .deploy
+          zip -r ../../webapp.zip .
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: apps/web/webapp.zip
+
+  # ============================================
+  # Configure App Settings
+  # ============================================
+  configure:
+    name: Configure App Settings
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        continue-on-error: true
+
+      - name: Set App Settings
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az webapp config appsettings set \
+              --resource-group TCDATA \
+              --name ${{ env.AZURE_WEBAPP_NAME }} \
+              --settings \
+                NODE_ENV=production \
+                DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+                AUTH_SECRET="${{ secrets.AUTH_SECRET }}" \
+                NEXTAUTH_URL="https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net" \
+                OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+        continue-on-error: true
+
+  # ============================================
+  # Health Check
+  # ============================================
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      - name: Wait for deployment
+        run: sleep 60
+
+      - name: Check website
+        run: |
+          for i in {1..5}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net || echo "000")
+            echo "Attempt $i: HTTP $response"
+            if [ "$response" -ge 200 ] && [ "$response" -lt 400 ]; then
+              echo "Website is accessible!"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Website check failed after 5 attempts"
+          exit 1
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "========================================"
+          echo "Deployment successful!"
+          echo "URL: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+          echo "========================================"

@@ -40,3 +40,8 @@ prisma/*.db-journal
 
 # Misc
 *.tsbuildinfo
+
+# Agent
+openspec
+IMPROVED-PROJECT-STRUCTURE.md
+.vercel
