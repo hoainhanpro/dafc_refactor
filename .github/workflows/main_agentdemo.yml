@@ -117,7 +117,7 @@ jobs:
           EOF
           
           cd .deploy
-          zip -r ../../webapp.zip .
+          zip -r ../../../webapp.zip .
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
