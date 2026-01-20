@@ -1,24 +1,25 @@
 # ============================================
 # DAFC OTB Platform - Azure App Service Deployment
 # ============================================
-# 
-# Deploy Next.js app (frontend + API routes) to Azure App Service.
-# 
+#
+# Deploy both Next.js frontend and NestJS backend to a single
+# Azure App Service using PM2 process manager.
+#
 # Architecture:
-#   - Next.js app has built-in API routes at /api/v1/*
-#   - API routes connect directly to PostgreSQL via Prisma
-#   - No separate backend needed (NestJS is optional)
+#   - Frontend (Next.js): Port 3000 - uses standalone output
+#   - Backend (NestJS): Port 3001 - compiled TypeScript
+#   - PM2 manages both processes
+#   - Azure routes traffic to port 8080 -> PM2 -> apps
 #
 # Required GitHub Secrets:
-#   - AZURE_WEBAPP_PUBLISH_PROFILE: Publish profile from Azure App Service
-#   - DATABASE_URL: PostgreSQL connection string (Supabase/Azure)
-#   - AUTH_SECRET: NextAuth secret key
-#   - OPENAI_API_KEY: OpenAI API key (optional, for AI features)
+#   - AZURE_WEBAPP_PUBLISH_PROFILE: Download from Azure Portal
+#   - DATABASE_URL: PostgreSQL connection string
+#   - AUTH_SECRET: NextAuth secret
+#   - JWT_SECRET: JWT secret for NestJS
 #
-# To get the publish profile:
-#   1. Go to Azure Portal > App Service > agentdemo
-#   2. Click "Download publish profile" in the top menu
-#   3. Copy the entire XML content and add it as a GitHub secret
+# Azure Configuration Required:
+#   - SCM_DO_BUILD_DURING_DEPLOYMENT: false
+#   - Startup Command: pm2-runtime start ecosystem.config.js
 # ============================================
 
 name: Deploy to Azure
@@ -29,23 +30,20 @@ on:
   workflow_dispatch:
 
 env:
+  AZURE_WEBAPP_NAME: agentdemo
   NODE_VERSION: '20'
   PNPM_VERSION: '9.15.0'
-  AZURE_WEBAPP_NAME: agentdemo
 
 jobs:
-  # ============================================
-  # Build and Deploy
-  # ============================================
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
 
@@ -61,66 +59,143 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm --filter=@dafc/database db:generate
 
+      - name: Build NestJS API
+        run: pnpm --filter=@dafc/api build
+
       - name: Build Next.js app
         run: pnpm --filter=@dafc/web build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_API_URL: http://localhost:3001
 
       - name: Prepare deployment package
         run: |
+          set -e
+          
+          echo "=========================================="
+          echo "Creating deployment structure"
+          echo "=========================================="
+          
+          # Create deploy directories
+          mkdir -p deploy/web deploy/api
+          
+          # ========================================
+          # Package Next.js (standalone mode)
+          # ========================================
+          echo "Packaging Next.js..."
           cd apps/web
           
-          # Create deployment folder
-          mkdir -p .deploy
-          cp -r .next .deploy/
-          cp -r public .deploy/
-          cp package.json .deploy/
-          cp next.config.mjs .deploy/
+          # Check standalone structure (monorepo creates apps/web inside standalone)
+          if [ -d ".next/standalone/apps/web" ]; then
+            echo "Monorepo standalone structure detected"
+            cp -r .next/standalone/apps/web/* ../../deploy/web/
+            cp -r .next/standalone/node_modules ../../deploy/web/ 2>/dev/null || true
+            # Copy packages if exists
+            if [ -d ".next/standalone/packages" ]; then
+              mkdir -p ../../deploy/web/packages
+              cp -r .next/standalone/packages/* ../../deploy/web/packages/
+            fi
+          else
+            echo "Standard standalone structure"
+            cp -r .next/standalone/* ../../deploy/web/
+          fi
           
-          # Copy Prisma schema and generated client
-          mkdir -p .deploy/node_modules/.prisma
-          mkdir -p .deploy/node_modules/@prisma
-          cp -r ../../packages/database/prisma .deploy/
-          cp -r node_modules/.prisma/client .deploy/node_modules/.prisma/ 2>/dev/null || true
-          cp -r node_modules/@prisma/client .deploy/node_modules/@prisma/ 2>/dev/null || true
+          # Copy static files
+          mkdir -p ../../deploy/web/.next
+          cp -r .next/static ../../deploy/web/.next/
           
-          # Create startup script
-          cat > .deploy/startup.sh << 'EOF'
-          #!/bin/bash
-          cd /home/site/wwwroot
-          npm install --omit=dev
-          npx prisma generate --schema=./prisma/schema.prisma
-          npm run start
+          # Copy public
+          cp -r public ../../deploy/web/
+          
+          cd ../..
+          echo "Next.js packaged successfully"
+          
+          # ========================================
+          # Package NestJS API
+          # ========================================
+          echo "Packaging NestJS..."
+          cp -r apps/api/dist deploy/api/
+          cp apps/api/package.json deploy/api/
+          
+          # Copy Prisma for API
+          mkdir -p deploy/api/prisma
+          cp -r packages/database/prisma/* deploy/api/prisma/
+          
+          # Copy node_modules for API (production only)
+          mkdir -p deploy/api/node_modules
+          cp -r apps/api/node_modules/@nestjs deploy/api/node_modules/ 2>/dev/null || true
+          cp -r apps/api/node_modules/@prisma deploy/api/node_modules/ 2>/dev/null || true
+          cp -r apps/api/node_modules/.prisma deploy/api/node_modules/ 2>/dev/null || true
+          cp -r node_modules/@prisma deploy/api/node_modules/ 2>/dev/null || true
+          cp -r node_modules/.prisma deploy/api/node_modules/ 2>/dev/null || true
+          
+          echo "NestJS packaged successfully"
+          
+          # ========================================
+          # Copy PM2 ecosystem config
+          # ========================================
+          echo "Setting up PM2..."
+          cp ecosystem.config.js deploy/
+          
+          # Create package.json for root
+          cat > deploy/package.json << 'EOF'
+          {
+            "name": "dafc-otb-platform",
+            "version": "1.0.0",
+            "private": true,
+            "scripts": {
+              "start": "pm2-runtime start ecosystem.config.js"
+            },
+            "dependencies": {
+              "pm2": "^5.3.0"
+            }
+          }
           EOF
-          chmod +x .deploy/startup.sh
           
-          # Create web.config for Azure
-          cat > .deploy/web.config << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-            <system.webServer>
-              <handlers>
-                <add name="iisnode" path="node_modules/next/dist/bin/next" verb="*" modules="iisnode"/>
-              </handlers>
-              <rewrite>
-                <rules>
-                  <rule name="NextJS">
-                    <match url="/*" />
-                    <action type="Rewrite" url="node_modules/next/dist/bin/next"/>
-                  </rule>
-                </rules>
-              </rewrite>
-              <iisnode node_env="production" />
-            </system.webServer>
-          </configuration>
-          EOF
+          # ========================================
+          # Final structure check
+          # ========================================
+          echo ""
+          echo "=========================================="
+          echo "Final deployment structure:"
+          echo "=========================================="
+          echo "Root:"
+          ls -la deploy/
+          echo ""
+          echo "Web folder:"
+          ls -la deploy/web/ | head -20
+          echo ""
+          echo "API folder:"
+          ls -la deploy/api/ | head -20
           
-          # FIX: Remove workspace:* from package.json to avoid npm error
-          cd .deploy
-          sed -i 's/"workspace:\*"/"*"/g' package.json
+          # Verify critical files
+          if [ ! -f "deploy/web/server.js" ]; then
+            echo "ERROR: web/server.js not found!"
+            find deploy/web -name "server.js" -type f
+            exit 1
+          fi
           
-          # Create zip in root directory
-          zip -r ../../../webapp.zip .
+          if [ ! -f "deploy/api/dist/main.js" ]; then
+            echo "ERROR: api/dist/main.js not found!"
+            ls -la deploy/api/dist/ 2>/dev/null || echo "No dist folder"
+            exit 1
+          fi
+          
+          echo ""
+          echo "All critical files verified!"
+          
+          # ========================================
+          # Create ZIP
+          # ========================================
+          echo ""
+          echo "Creating ZIP package..."
+          cd deploy
+          zip -r ../webapp.zip . -x "*.git*"
+          cd ..
+          
+          echo "ZIP created successfully"
+          ls -la webapp.zip
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
@@ -129,38 +204,6 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: webapp.zip
 
-  # ============================================
-  # Configure App Settings
-  # ============================================
-  configure:
-    name: Configure App Settings
-    runs-on: ubuntu-latest
-    needs: build-and-deploy
-    steps:
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        continue-on-error: true
-
-      - name: Set App Settings
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az webapp config appsettings set \
-              --resource-group TCDATA \
-              --name ${{ env.AZURE_WEBAPP_NAME }} \
-              --settings \
-                NODE_ENV=production \
-                DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-                AUTH_SECRET="${{ secrets.AUTH_SECRET }}" \
-                NEXTAUTH_URL="https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net" \
-                OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
-        continue-on-error: true
-
-  # ============================================
-  # Health Check
-  # ============================================
   health-check:
     name: Health Check
     runs-on: ubuntu-latest
@@ -169,25 +212,36 @@ jobs:
       - name: Wait for deployment
         run: sleep 120
 
-      - name: Check website
+      - name: Check services
         run: |
           WEBAPP_URL="agentdemo-ccfzcrb0a3crh5by.southeastasia-01.azurewebsites.net"
+          
+          echo "Checking frontend..."
           for i in {1..5}; do
-            response=$(curl -s -o /dev/null -w "%{http_code}" https://$WEBAPP_URL || echo "000")
-            echo "Attempt $i: HTTP $response"
+            response=$(curl -s -o /dev/null -w "%{http_code}" "https://$WEBAPP_URL" || echo "000")
+            echo "Frontend attempt $i: HTTP $response"
             if [ "$response" -ge 200 ] && [ "$response" -lt 400 ]; then
-              echo "Website is accessible!"
-              exit 0
+              echo "Frontend is accessible!"
+              break
             fi
-            sleep 15
+            sleep 20
           done
-          echo "Website check failed after 5 attempts"
-          echo "This is just a warning - deployment may still be starting"
-          exit 0
-
-      - name: Deployment Summary
-        run: |
+          
+          echo ""
+          echo "Checking API..."
+          for i in {1..5}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" "https://$WEBAPP_URL/api/v1/health/ping" || echo "000")
+            echo "API attempt $i: HTTP $response"
+            if [ "$response" -ge 200 ] && [ "$response" -lt 400 ]; then
+              echo "API is accessible!"
+              break
+            fi
+            sleep 20
+          done
+          
+          echo ""
           echo "========================================"
           echo "Deployment completed!"
-          echo "URL: https://agentdemo-ccfzcrb0a3crh5by.southeastasia-01.azurewebsites.net"
+          echo "Frontend: https://$WEBAPP_URL"
+          echo "API: https://$WEBAPP_URL/api/v1"
           echo "========================================"
