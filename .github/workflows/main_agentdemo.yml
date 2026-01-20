@@ -66,6 +66,13 @@ jobs:
           set -e
           mkdir -p deploy
           
+          # Disable Azure Oryx build - standalone already has all dependencies
+          echo "[config]" > deploy/.deployment
+          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> deploy/.deployment
+          
+          # Create .skipbuilding marker file
+          touch deploy/.skipbuilding
+          
           echo "=========================================="
           echo "Step 1: Analyzing standalone output"
           echo "=========================================="
