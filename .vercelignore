@@ -1,0 +1,27 @@
+# Ignore large files and build artifacts
+webapp.zip
+*.zip
+
+# Node modules (Vercel installs fresh)
+node_modules
+**/node_modules
+
+# Build outputs
+apps/web/.next
+apps/api/dist
+.turbo
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Git
+.git
+
+# IDE
+.idea
+.vscode
+
+# Logs
+*.log
