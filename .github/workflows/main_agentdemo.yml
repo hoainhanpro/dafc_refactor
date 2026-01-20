@@ -2,23 +2,21 @@
 # DAFC OTB Platform - Azure App Service Deployment
 # ============================================
 # 
-# Deploy Next.js app (frontend + API routes) to Azure App Service.
+# Deploy Next.js app (standalone mode) to Azure App Service.
 # 
 # Architecture:
-#   - Next.js app has built-in API routes at /api/v1/*
-#   - API routes connect directly to PostgreSQL via Prisma
-#   - No separate backend needed (NestJS is optional)
+#   - Next.js app with standalone output for minimal deployment
+#   - API routes at /api/v1/* connect directly to PostgreSQL via Prisma
 #
 # Required GitHub Secrets:
 #   - AZURE_WEBAPP_PUBLISH_PROFILE: Publish profile from Azure App Service
 #   - DATABASE_URL: PostgreSQL connection string (Supabase/Azure)
-#   - AUTH_SECRET: NextAuth secret key
+#   - AUTH_SECRET: NextAuth secret key  
 #   - OPENAI_API_KEY: OpenAI API key (optional, for AI features)
 #
-# To get the publish profile:
-#   1. Go to Azure Portal > App Service > agentdemo
-#   2. Click "Download publish profile" in the top menu
-#   3. Copy the entire XML content and add it as a GitHub secret
+# Azure App Service Configuration:
+#   - Runtime: Node 20 LTS
+#   - Startup Command: node server.js
 # ============================================
 
 name: Deploy to Azure
@@ -34,9 +32,6 @@ env:
   AZURE_WEBAPP_NAME: agentdemo
 
 jobs:
-  # ============================================
-  # Build and Deploy
-  # ============================================
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
@@ -45,7 +40,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
 
@@ -61,7 +56,6 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm --filter=@dafc/database db:generate
 
-
       - name: Build Next.js app
         run: pnpm --filter=@dafc/web build
         env:
@@ -69,56 +63,113 @@ jobs:
 
       - name: Prepare deployment package
         run: |
+          set -e
           mkdir -p deploy
+          
+          echo "=========================================="
+          echo "Step 1: Analyzing standalone output"
+          echo "=========================================="
+          
           cd apps/web
-          
-          # ========================================
-          # Debug: Show standalone structure
-          # ========================================
-          echo "Standalone structure:"
+          echo "Contents of .next/standalone/:"
           ls -la .next/standalone/
-          echo "---"
-          ls -la .next/standalone/apps/web/ 2>/dev/null || echo "No apps/web folder"
           
-          # ========================================
-          # Copy Next.js standalone build (monorepo structure)
-          # ========================================
-          # In monorepo, standalone creates: .next/standalone/apps/web/server.js
-          if [ -f ".next/standalone/apps/web/server.js" ]; then
-            echo "Monorepo structure detected"
-            # Copy the web app files
+          # Check for monorepo structure
+          if [ -d ".next/standalone/apps/web" ]; then
+            echo ""
+            echo "Monorepo structure detected!"
+            echo "Contents of .next/standalone/apps/web/:"
+            ls -la .next/standalone/apps/web/
+            
+            echo ""
+            echo "=========================================="
+            echo "Step 2: Copying files (monorepo mode)"
+            echo "=========================================="
+            
+            # Copy web app (contains server.js)
             cp -r .next/standalone/apps/web/* ../../deploy/
-            # Copy shared node_modules from standalone root
-            cp -r .next/standalone/node_modules ../../deploy/ 2>/dev/null || true
+            
+            # Copy node_modules from standalone root
+            if [ -d ".next/standalone/node_modules" ]; then
+              cp -r .next/standalone/node_modules ../../deploy/
+            fi
+            
+            # Copy packages if exists (for workspace dependencies)
+            if [ -d ".next/standalone/packages" ]; then
+              cp -r .next/standalone/packages ../../deploy/
+            fi
           else
-            echo "Standard structure detected"
+            echo ""
+            echo "Standard structure detected!"
+            echo ""
+            echo "=========================================="
+            echo "Step 2: Copying files (standard mode)"
+            echo "=========================================="
+            
             cp -r .next/standalone/* ../../deploy/
           fi
           
-          # Copy static files (not included in standalone)
+          echo ""
+          echo "=========================================="
+          echo "Step 3: Copying static assets"
+          echo "=========================================="
+          
+          # Copy static files (required for Next.js)
           mkdir -p ../../deploy/.next
           cp -r .next/static ../../deploy/.next/
+          echo "Copied .next/static"
           
           # Copy public folder
-          cp -r public ../../deploy/
+          if [ -d "public" ]; then
+            cp -r public ../../deploy/
+            echo "Copied public folder"
+          fi
           
-          # ========================================
-          # Copy Prisma
-          # ========================================
+          echo ""
+          echo "=========================================="
+          echo "Step 4: Setting up Prisma"
+          echo "=========================================="
+          
+          # Copy Prisma schema
+          mkdir -p ../../deploy/prisma
+          cp -r ../../packages/database/prisma/* ../../deploy/prisma/
+          echo "Copied Prisma schema"
+          
+          # Copy Prisma client
           mkdir -p ../../deploy/node_modules/.prisma
           mkdir -p ../../deploy/node_modules/@prisma
-          cp -r ../../packages/database/prisma ../../deploy/
-          cp -r node_modules/.prisma/client ../../deploy/node_modules/.prisma/ 2>/dev/null || true
-          cp -r node_modules/@prisma/client ../../deploy/node_modules/@prisma/ 2>/dev/null || true
+          cp -r node_modules/.prisma/client ../../deploy/node_modules/.prisma/ 2>/dev/null || echo "No .prisma/client found"
+          cp -r node_modules/@prisma/client ../../deploy/node_modules/@prisma/ 2>/dev/null || echo "No @prisma/client found"
+          
+          echo ""
+          echo "=========================================="
+          echo "Step 5: Verifying deployment package"
+          echo "=========================================="
           
           cd ../../deploy
           
-          # Debug: Show final structure
-          echo "Deploy structure:"
+          echo "Final deploy structure:"
           ls -la
           
-          # Zip for deployment
-          zip -r ../webapp.zip .
+          # Verify server.js exists
+          if [ ! -f "server.js" ]; then
+            echo "ERROR: server.js not found in deploy folder!"
+            echo "Looking for server.js recursively:"
+            find . -name "server.js" -type f
+            exit 1
+          fi
+          
+          echo ""
+          echo "server.js found!"
+          
+          echo ""
+          echo "=========================================="
+          echo "Step 6: Creating ZIP package"
+          echo "=========================================="
+          
+          zip -r ../webapp.zip . -x "*.git*"
+          echo "Created webapp.zip"
+          ls -la ../webapp.zip
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
@@ -127,64 +178,37 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: webapp.zip
 
-  # ============================================
-  # Configure App Settings
-  # ============================================
-  configure:
-    name: Configure App Settings
-    runs-on: ubuntu-latest
-    needs: build-and-deploy
-    steps:
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        continue-on-error: true
-
-      - name: Set App Settings
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az webapp config appsettings set \
-              --resource-group TCDATA \
-              --name ${{ env.AZURE_WEBAPP_NAME }} \
-              --settings \
-                NODE_ENV=production \
-                DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-                AUTH_SECRET="${{ secrets.AUTH_SECRET }}" \
-                NEXTAUTH_URL="https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net" \
-                OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
-        continue-on-error: true
-
-  # ============================================
-  # Health Check
-  # ============================================
   health-check:
     name: Health Check
     runs-on: ubuntu-latest
     needs: build-and-deploy
     steps:
       - name: Wait for deployment
-        run: sleep 60
+        run: sleep 90
 
       - name: Check website
         run: |
-          for i in {1..5}; do
-            response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net || echo "000")
+          WEBAPP_URL="agentdemo-ccfzcrb0a3crh5by.southeastasia-01.azurewebsites.net"
+          
+          echo "Checking: https://$WEBAPP_URL"
+          
+          for i in {1..10}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" "https://$WEBAPP_URL" || echo "000")
             echo "Attempt $i: HTTP $response"
+            
             if [ "$response" -ge 200 ] && [ "$response" -lt 400 ]; then
-              echo "Website is accessible!"
+              echo ""
+              echo "========================================"
+              echo "Deployment successful!"
+              echo "URL: https://$WEBAPP_URL"
+              echo "========================================"
               exit 0
             fi
-            sleep 15
+            
+            sleep 20
           done
-          echo "Website check failed after 5 attempts"
+          
+          echo ""
+          echo "Website health check failed after 10 attempts"
+          echo "Please check Azure logs for more details"
           exit 1
-
-      - name: Deployment Summary
-        if: success()
-        run: |
-          echo "========================================"
-          echo "Deployment successful!"
-          echo "URL: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
-          echo "========================================"
