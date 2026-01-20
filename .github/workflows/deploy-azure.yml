@@ -60,13 +60,22 @@ jobs:
         run: |
           # Create deployment directory
           mkdir -p deploy/web deploy/api
+          
           # ========================================
           # Package Next.js (standalone)
           # ========================================
           cd apps/web
+          
+          # Copy standalone output
           cp -r .next/standalone/* ../../deploy/web/
-          cp -r .next/static ../../deploy/web/.next/static
-          cp -r public ../../deploy/web/public
+          
+          # Create .next directory in deploy folder and copy static files
+          mkdir -p ../../deploy/web/.next
+          cp -r .next/static ../../deploy/web/.next/
+          
+          # Copy public folder
+          cp -r public ../../deploy/web/
+          
           cd ../..
           # ========================================
           # Package NestJS API
