@@ -1,7 +1,7 @@
 {
-    "buildCommand": "pnpm run build --filter=@dafc/web",
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "buildCommand": "pnpm --filter=@dafc/database db:generate && pnpm --filter=@dafc/web build",
     "installCommand": "pnpm install",
-    "devCommand": "pnpm run dev --filter=@dafc/web",
-    "outputDirectory": "apps/web/.next",
-    "framework": "nextjs"
+    "framework": "nextjs",
+    "outputDirectory": "apps/web/.next"
 }
