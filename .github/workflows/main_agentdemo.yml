@@ -142,13 +142,11 @@ jobs:
           mkdir -p deploy/api/prisma
           cp -r packages/database/prisma/* deploy/api/prisma/
           
-          # Copy node_modules for API (production only)
-          mkdir -p deploy/api/node_modules
-          cp -r apps/api/node_modules/@nestjs deploy/api/node_modules/ 2>/dev/null || true
-          cp -r apps/api/node_modules/@prisma deploy/api/node_modules/ 2>/dev/null || true
-          cp -r apps/api/node_modules/.prisma deploy/api/node_modules/ 2>/dev/null || true
-          cp -r node_modules/@prisma deploy/api/node_modules/ 2>/dev/null || true
-          cp -r node_modules/.prisma deploy/api/node_modules/ 2>/dev/null || true
+          # Install production dependencies for API
+          echo "Installing API dependencies..."
+          cd deploy/api
+          npm install --omit=dev --ignore-scripts
+          cd ../..
           
           echo "NestJS packaged successfully"
           
@@ -174,6 +172,12 @@ jobs:
             }
           }
           EOF
+          
+          # Install root dependencies (PM2 and http-proxy)
+          echo "Installing proxy dependencies..."
+          cd deploy
+          npm install --omit=dev
+          cd ..
           
           # ========================================
           # Final structure check
