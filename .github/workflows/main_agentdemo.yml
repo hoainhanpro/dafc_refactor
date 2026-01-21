@@ -101,9 +101,16 @@ jobs:
             cp -r .next/standalone/* ../../deploy/web/
           fi
           
-          # Copy static files
+          # Copy the complete .next folder (static files, BUILD_ID, manifests, etc.)
           mkdir -p ../../deploy/web/.next
           cp -r .next/static ../../deploy/web/.next/
+          cp -r .next/server ../../deploy/web/.next/ 2>/dev/null || true
+          cp .next/BUILD_ID ../../deploy/web/.next/ 2>/dev/null || true
+          cp .next/build-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
+          cp .next/prerender-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
+          cp .next/routes-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
+          cp .next/react-loadable-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
+          cp .next/package.json ../../deploy/web/.next/ 2>/dev/null || true
           
           # Copy public
           cp -r public ../../deploy/web/
