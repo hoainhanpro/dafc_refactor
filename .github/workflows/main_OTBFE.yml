@@ -55,30 +55,40 @@ jobs:
           mkdir -p deploy
           cd apps/web
           
-          # Copy standalone output
+          echo "=== Checking standalone output structure ==="
+          ls -la .next/standalone/ || echo "No standalone root"
+          ls -la .next/standalone/apps/web/ 2>/dev/null || echo "No monorepo structure"
+          
+          # Copy standalone output (handles both monorepo and standard structures)
           if [ -d ".next/standalone/apps/web" ]; then
-            echo "Monorepo standalone structure"
+            echo "Monorepo standalone structure detected"
+            # Copy the web app files
             cp -r .next/standalone/apps/web/* ../../deploy/
+            # Copy root node_modules
             cp -r .next/standalone/node_modules ../../deploy/ 2>/dev/null || true
+            # Copy packages if exist
             if [ -d ".next/standalone/packages" ]; then
               mkdir -p ../../deploy/packages
               cp -r .next/standalone/packages/* ../../deploy/packages/
             fi
+            # The standalone already has .next folder, copy static assets into it
+            mkdir -p ../../deploy/.next
+            cp -r .next/static ../../deploy/.next/
           else
-            echo "Standard standalone structure"
+            echo "Standard standalone structure detected"
             cp -r .next/standalone/* ../../deploy/
+            # Copy static assets
+            mkdir -p ../../deploy/.next
+            cp -r .next/static ../../deploy/.next/
           fi
           
-          # Copy .next folder (static, server, manifests)
-          mkdir -p ../../deploy/.next
-          cp -r .next/static ../../deploy/.next/
-          cp -r .next/server ../../deploy/.next/ 2>/dev/null || true
-          for file in BUILD_ID build-manifest.json prerender-manifest.json routes-manifest.json react-loadable-manifest.json package.json app-build-manifest.json; do
-            [ -f ".next/$file" ] && cp ".next/$file" "../../deploy/.next/"
-          done
-          
-          # Copy public
+          # Copy public folder
           cp -r public ../../deploy/
+          
+          # Debug: show deploy structure
+          echo "=== Deploy structure ==="
+          ls -la ../../deploy/
+          ls -la ../../deploy/.next/ 2>/dev/null || echo "No .next folder"
           
           cd ../..
           
