@@ -53,13 +53,51 @@ jobs:
           
           # Copy dist folder
           cp -r apps/api/dist deploy/
-          cp apps/api/package.json deploy/
           
-          # Copy Prisma schema and generated client
-          mkdir -p deploy/prisma
-          cp -r packages/database/prisma/* deploy/prisma/
+          # Create production package.json without workspace: protocol
+          node -e "
+            const pkg = require('./apps/api/package.json');
+            const prodPkg = {
+              name: pkg.name,
+              version: pkg.version,
+              private: true,
+              scripts: { start: 'node dist/main.js' },
+              dependencies: {}
+            };
+            // Copy non-workspace dependencies
+            for (const [name, version] of Object.entries(pkg.dependencies || {})) {
+              if (!version.startsWith('workspace:')) {
+                prodPkg.dependencies[name] = version;
+              }
+            }
+            console.log(JSON.stringify(prodPkg, null, 2));
+          " > deploy/package.json
           
-          # Install production dependencies
+          echo "Created production package.json:"
+          cat deploy/package.json
+          
+          # Copy workspace packages (database and shared)
+          mkdir -p deploy/node_modules/@dafc
+          
+          # Copy database package
+          if [ -d "packages/database" ]; then
+            mkdir -p deploy/node_modules/@dafc/database
+            cp -r packages/database/dist deploy/node_modules/@dafc/database/ 2>/dev/null || true
+            cp packages/database/package.json deploy/node_modules/@dafc/database/
+            # Copy Prisma generated client
+            cp -r node_modules/.prisma deploy/node_modules/ 2>/dev/null || true
+            cp -r node_modules/@prisma deploy/node_modules/ 2>/dev/null || true
+          fi
+          
+          # Copy shared package
+          if [ -d "packages/shared" ]; then
+            mkdir -p deploy/node_modules/@dafc/shared
+            cp -r packages/shared/dist deploy/node_modules/@dafc/shared/ 2>/dev/null || true
+            cp -r packages/shared/src deploy/node_modules/@dafc/shared/ 2>/dev/null || true
+            cp packages/shared/package.json deploy/node_modules/@dafc/shared/
+          fi
+          
+          # Install remaining production dependencies
           cd deploy
           npm install --omit=dev
           cd ..
