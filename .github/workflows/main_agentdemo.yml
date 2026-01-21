@@ -133,12 +133,13 @@ jobs:
           echo "NestJS packaged successfully"
           
           # ========================================
-          # Copy PM2 ecosystem config
+          # Copy PM2 config and Proxy
           # ========================================
-          echo "Setting up PM2..."
+          echo "Setting up PM2 and Proxy..."
           cp ecosystem.config.js deploy/
+          cp proxy.js deploy/
           
-          # Create package.json for root
+          # Create package.json for root with http-proxy dependency
           cat > deploy/package.json << 'EOF'
           {
             "name": "dafc-otb-platform",
@@ -148,7 +149,8 @@ jobs:
               "start": "pm2-runtime start ecosystem.config.js"
             },
             "dependencies": {
-              "pm2": "^5.3.0"
+              "pm2": "^5.3.0",
+              "http-proxy": "^1.18.1"
             }
           }
           EOF
@@ -179,6 +181,11 @@ jobs:
           if [ ! -f "deploy/api/dist/main.js" ]; then
             echo "ERROR: api/dist/main.js not found!"
             ls -la deploy/api/dist/ 2>/dev/null || echo "No dist folder"
+            exit 1
+          fi
+          
+          if [ ! -f "deploy/proxy.js" ]; then
+            echo "ERROR: proxy.js not found!"
             exit 1
           fi
           
