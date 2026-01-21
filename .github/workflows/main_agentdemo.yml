@@ -96,24 +96,37 @@ jobs:
               mkdir -p ../../deploy/web/packages
               cp -r .next/standalone/packages/* ../../deploy/web/packages/
             fi
+            # In monorepo, .next might exist in standalone output
+            if [ -d ".next/standalone/apps/web/.next" ]; then
+              echo "Found .next in standalone output"
+              cp -r .next/standalone/apps/web/.next ../../deploy/web/
+            fi
           else
             echo "Standard standalone structure"
             cp -r .next/standalone/* ../../deploy/web/
           fi
           
-          # Copy the complete .next folder (static files, BUILD_ID, manifests, etc.)
+          # Merge additional .next files from build (static, server, manifests)
+          # These may not be in standalone output
+          echo "Merging .next build artifacts..."
           mkdir -p ../../deploy/web/.next
-          cp -r .next/static ../../deploy/web/.next/
-          cp -r .next/server ../../deploy/web/.next/ 2>/dev/null || true
-          cp .next/BUILD_ID ../../deploy/web/.next/ 2>/dev/null || true
-          cp .next/build-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
-          cp .next/prerender-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
-          cp .next/routes-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
-          cp .next/react-loadable-manifest.json ../../deploy/web/.next/ 2>/dev/null || true
-          cp .next/package.json ../../deploy/web/.next/ 2>/dev/null || true
+          cp -r .next/static ../../deploy/web/.next/ 2>/dev/null || echo "No static folder"
+          cp -r .next/server ../../deploy/web/.next/ 2>/dev/null || echo "No server folder"
+          
+          # Copy individual manifest files
+          for file in BUILD_ID build-manifest.json prerender-manifest.json routes-manifest.json react-loadable-manifest.json package.json app-build-manifest.json; do
+            if [ -f ".next/$file" ]; then
+              cp ".next/$file" "../../deploy/web/.next/"
+              echo "Copied .next/$file"
+            fi
+          done
           
           # Copy public
           cp -r public ../../deploy/web/
+          
+          # Debug: show what's in deploy/web/.next
+          echo "Contents of deploy/web/.next:"
+          ls -la ../../deploy/web/.next/ | head -20
           
           cd ../..
           echo "Next.js packaged successfully"
