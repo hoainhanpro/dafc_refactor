@@ -1,0 +1,110 @@
+# ============================================
+# OTBFE - Next.js Frontend Deployment
+# ============================================
+name: Deploy Frontend to OTBFE
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - 'packages/shared/**'
+      - '.github/workflows/main_OTBFE.yml'
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: OTBFE
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9.15.0'
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter=@dafc/database db:generate
+
+      - name: Build Next.js app
+        run: pnpm --filter=@dafc/web build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_API_URL: https://otbbe-buc2h4bybthagxcq.southeastasia-01.azurewebsites.net
+
+      - name: Prepare deployment package
+        run: |
+          set -e
+          mkdir -p deploy
+          cd apps/web
+          
+          # Copy standalone output
+          if [ -d ".next/standalone/apps/web" ]; then
+            echo "Monorepo standalone structure"
+            cp -r .next/standalone/apps/web/* ../../deploy/
+            cp -r .next/standalone/node_modules ../../deploy/ 2>/dev/null || true
+            if [ -d ".next/standalone/packages" ]; then
+              mkdir -p ../../deploy/packages
+              cp -r .next/standalone/packages/* ../../deploy/packages/
+            fi
+          else
+            echo "Standard standalone structure"
+            cp -r .next/standalone/* ../../deploy/
+          fi
+          
+          # Copy .next folder (static, server, manifests)
+          mkdir -p ../../deploy/.next
+          cp -r .next/static ../../deploy/.next/
+          cp -r .next/server ../../deploy/.next/ 2>/dev/null || true
+          for file in BUILD_ID build-manifest.json prerender-manifest.json routes-manifest.json react-loadable-manifest.json package.json app-build-manifest.json; do
+            [ -f ".next/$file" ] && cp ".next/$file" "../../deploy/.next/"
+          done
+          
+          # Copy public
+          cp -r public ../../deploy/
+          
+          cd ../..
+          
+          # Create ZIP
+          cd deploy
+          zip -r ../frontend.zip . -x "*.git*"
+          cd ..
+          
+          echo "Frontend package created"
+          ls -la frontend.zip
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
+          package: frontend.zip
+
+      - name: Health check
+        run: |
+          echo "Waiting for deployment..."
+          sleep 60
+          response=$(curl -s -o /dev/null -w "%{http_code}" "https://otbfe-fxc0fud5ewbfctd7.southeastasia-01.azurewebsites.net" || echo "000")
+          echo "Frontend response: HTTP $response"
+          if [ "$response" -ge 200 ] && [ "$response" -lt 400 ]; then
+            echo "Frontend deployment successful!"
+          else
+            echo "Warning: Frontend may still be starting up"
+          fi

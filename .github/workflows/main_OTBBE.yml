@@ -1,0 +1,92 @@
+# ============================================
+# OTBBE - NestJS Backend Deployment
+# ============================================
+name: Deploy Backend to OTBBE
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'packages/database/**'
+      - 'packages/shared/**'
+      - '.github/workflows/main_OTBBE.yml'
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: OTBBE
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9.15.0'
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm --filter=@dafc/database db:generate
+
+      - name: Build NestJS API
+        run: pnpm --filter=@dafc/api build
+
+      - name: Prepare deployment package
+        run: |
+          set -e
+          mkdir -p deploy
+          
+          # Copy dist folder
+          cp -r apps/api/dist deploy/
+          cp apps/api/package.json deploy/
+          
+          # Copy Prisma schema and generated client
+          mkdir -p deploy/prisma
+          cp -r packages/database/prisma/* deploy/prisma/
+          
+          # Install production dependencies
+          cd deploy
+          npm install --omit=dev
+          cd ..
+          
+          # Create ZIP
+          cd deploy
+          zip -r ../backend.zip . -x "*.git*"
+          cd ..
+          
+          echo "Backend package created"
+          ls -la backend.zip
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+          package: backend.zip
+
+      - name: Health check
+        run: |
+          echo "Waiting for deployment..."
+          sleep 60
+          response=$(curl -s -o /dev/null -w "%{http_code}" "https://otbbe-buc2h4bybthagxcq.southeastasia-01.azurewebsites.net/api/v1/health/ping" || echo "000")
+          echo "Backend API response: HTTP $response"
+          if [ "$response" -ge 200 ] && [ "$response" -lt 400 ]; then
+            echo "Backend deployment successful!"
+          else
+            echo "Warning: Backend may still be starting up"
+          fi
