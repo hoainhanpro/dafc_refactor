@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 // app/api/v1/reports/budget-summary/route.ts
 // Power BI compatible Budget Summary Report API
 

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 // app/api/cron/keep-alive/route.ts
 // Keep-alive endpoint to prevent Render cold starts
 

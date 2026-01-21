@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 // app/api/v1/reports/sku-performance/route.ts
 // Power BI compatible SKU Performance Report API
 

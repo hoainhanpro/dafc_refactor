@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { streamText } from 'ai';
 import { openai, DEFAULT_MODEL } from '@/lib/ai/config';
 import { SYSTEM_PROMPT, getContextPrompt, getDataPrompt, ChatContext } from '@/lib/ai/prompts';

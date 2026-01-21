@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 // app/api/v1/reports/otb-analysis/route.ts
 // Power BI compatible OTB Analysis Report API
 
