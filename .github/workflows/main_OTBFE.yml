@@ -55,40 +55,67 @@ jobs:
           mkdir -p deploy
           cd apps/web
           
-          echo "=== Checking standalone output structure ==="
-          ls -la .next/standalone/ || echo "No standalone root"
+          echo "=== Build output structure ==="
+          echo "--- .next/standalone/ ---"
+          ls -la .next/standalone/ 2>/dev/null || echo "No standalone root"
+          echo "--- .next/standalone/apps/web/ ---"
           ls -la .next/standalone/apps/web/ 2>/dev/null || echo "No monorepo structure"
+          echo "--- .next/standalone/apps/web/.next/ ---"
+          ls -la .next/standalone/apps/web/.next/ 2>/dev/null || echo "No .next in web"
+          echo "--- .next/standalone/apps/web/.next/server/ ---"
+          ls -la .next/standalone/apps/web/.next/server/ 2>/dev/null || echo "No server folder"
           
-          # Copy standalone output (handles both monorepo and standard structures)
+          # Handle monorepo standalone structure
           if [ -d ".next/standalone/apps/web" ]; then
-            echo "Monorepo standalone structure detected"
-            # Copy the web app files
+            echo "=== Monorepo standalone structure detected ==="
+            
+            # 1. Copy web app (includes its own .next folder with server routes)
             cp -r .next/standalone/apps/web/* ../../deploy/
-            # Copy root node_modules
-            cp -r .next/standalone/node_modules ../../deploy/ 2>/dev/null || true
-            # Copy packages if exist
+            
+            # 2. Copy root node_modules
+            if [ -d ".next/standalone/node_modules" ]; then
+              cp -r .next/standalone/node_modules ../../deploy/
+            fi
+            
+            # 3. Copy workspace packages if exist
             if [ -d ".next/standalone/packages" ]; then
               mkdir -p ../../deploy/packages
               cp -r .next/standalone/packages/* ../../deploy/packages/
             fi
-            # The standalone already has .next folder, copy static assets into it
-            mkdir -p ../../deploy/.next
-            cp -r .next/static ../../deploy/.next/
+            
+            # 4. CRITICAL: Copy static assets to the EXISTING .next folder from standalone
+            # The .next folder should already exist from step 1
+            if [ -d ".next/static" ]; then
+              cp -r .next/static ../../deploy/.next/
+            fi
+            
           else
-            echo "Standard standalone structure detected"
+            echo "=== Standard standalone structure detected ==="
             cp -r .next/standalone/* ../../deploy/
+            
             # Copy static assets
-            mkdir -p ../../deploy/.next
-            cp -r .next/static ../../deploy/.next/
+            if [ -d ".next/static" ]; then
+              mkdir -p ../../deploy/.next
+              cp -r .next/static ../../deploy/.next/
+            fi
           fi
           
           # Copy public folder
-          cp -r public ../../deploy/
+          if [ -d "public" ]; then
+            cp -r public ../../deploy/
+          fi
           
-          # Debug: show deploy structure
-          echo "=== Deploy structure ==="
+          # Debug output
+          echo "=== Final deploy structure ==="
           ls -la ../../deploy/
+          echo "--- .next folder ---"
           ls -la ../../deploy/.next/ 2>/dev/null || echo "No .next folder"
+          echo "--- .next/server folder ---"
+          ls -la ../../deploy/.next/server/ 2>/dev/null || echo "No server folder"
+          echo "--- .next/server/app folder (routes) ---"
+          ls -la ../../deploy/.next/server/app/ 2>/dev/null || echo "No app folder"
+          echo "--- Check for (auth) route group ---"
+          ls -la "../../deploy/.next/server/app/(auth)/" 2>/dev/null || echo "No (auth) route group"
           
           cd ../..
           
@@ -97,7 +124,7 @@ jobs:
           zip -r ../frontend.zip . -x "*.git*"
           cd ..
           
-          echo "Frontend package created"
+          echo "=== Package info ==="
           ls -la frontend.zip
 
       - name: Deploy to Azure Web App
