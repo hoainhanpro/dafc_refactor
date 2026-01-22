@@ -69,22 +69,27 @@ jobs:
           if [ -d ".next/standalone/apps/web" ]; then
             echo "=== Monorepo standalone structure detected ==="
             
-            # 1. Copy web app (includes its own .next folder with server routes)
+            # 1. Copy web app files (NOTE: * glob doesn't match hidden files like .next)
             cp -r .next/standalone/apps/web/* ../../deploy/
             
-            # 2. Copy root node_modules
+            # 2. CRITICAL: Copy hidden .next folder separately (glob * misses dotfiles)
+            if [ -d ".next/standalone/apps/web/.next" ]; then
+              echo "Copying .next folder from standalone..."
+              cp -r .next/standalone/apps/web/.next ../../deploy/
+            fi
+            
+            # 3. Copy root node_modules
             if [ -d ".next/standalone/node_modules" ]; then
               cp -r .next/standalone/node_modules ../../deploy/
             fi
             
-            # 3. Copy workspace packages if exist
+            # 4. Copy workspace packages if exist
             if [ -d ".next/standalone/packages" ]; then
               mkdir -p ../../deploy/packages
               cp -r .next/standalone/packages/* ../../deploy/packages/
             fi
             
-            # 4. CRITICAL: Copy static assets to the EXISTING .next folder from standalone
-            # The .next folder should already exist from step 1
+            # 5. Copy static assets into .next folder
             if [ -d ".next/static" ]; then
               cp -r .next/static ../../deploy/.next/
             fi
